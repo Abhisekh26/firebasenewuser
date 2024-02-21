@@ -11,11 +11,35 @@ const AuthForm = () => {
     setIsLogin((prevState) => !prevState);
   };
    function submitHandler(event){
-     event .preventDefault()
+     event.preventDefault()
      const email=emailid.current.value
      const passe=password.current.value
      if(isLogin){
-
+      fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBWAai-YRPJ8fRwGXSB0LiHg1JkaxQv-zo`,{
+        method:'POST',
+        body:JSON.stringify({
+          email:email,
+          password:passe,
+          returnSecureToken:true
+        }),
+        headers:{
+          'Content-type':'application/json'
+        }
+      }).then(res=>{
+        if(res.ok){
+          // console.log(res.json())
+          return res.json().then(data=>{
+            console.log(data.idToken)
+          })
+        }
+        else{
+          return res.json().then(data=>{
+            alert(data.error.message)
+          }
+            
+            )
+        }
+      })
      }else{
       hide(true)
       fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBWAai-YRPJ8fRwGXSB0LiHg1JkaxQv-zo`,{
